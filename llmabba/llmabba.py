@@ -1,30 +1,26 @@
 from transformers import DataCollatorForLanguageModeling, DataCollatorWithPadding, AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, Trainer, TrainingArguments
 from accelerate import FullyShardedDataParallelPlugin, Accelerator
-import torch
+import math
 from torch.distributed.fsdp.fully_sharded_data_parallel import FullOptimStateDictConfig, FullStateDictConfig
 from peft import LoraConfig, PeftModel, prepare_model_for_kbit_training, get_peft_model, TaskType
-from sklearn.utils.class_weight import compute_class_weight
 from sklearn import preprocessing
 import numpy as np
 from .abba import XABBA
 import pickle
 import os
 import torch
-from datasets.dataset_dict import DatasetDict
 from peft import PeftModel
 from .utils.fundamentals import *
-from .utils.data_loader import load_from_tsfile_to_dataframe
 from .utils.regressor_tools import process_data, fit_regressor, calculate_regression_metrics
-from .utils.tools import create_directory
-from .utils.transformer_tools import fit_transformer
 from sklearn.model_selection import train_test_split
 from datetime import datetime
 from datasets.dataset_dict import DatasetDict
 from datasets import Dataset
+import matplotlib.pyplot as plt
 
-    
 def save_abba(model, filename):
     pickle.dump(model, file = open(filename, "wb"))
+
 
 def load_abba(filename):
     return pickle.load(open(filename, "rb"))
@@ -40,6 +36,7 @@ def ListToString(s):
     # return string
     return str1
 
+
 # Python program to convert a string to list
 def StringToList(s):
     # initialize an empty string
@@ -49,6 +46,23 @@ def StringToList(s):
         str1.append(s[ele*2])
     # return string
     return str1
+
+
+def cross_correlation(x, y):
+    # Calculate means
+    x_mean = mean(x)
+    y_mean = mean(y)
+
+    # Calculate numerator
+    numerator = sum((a - x_mean) * (b - y_mean) for a, b in zip(x, y))
+
+    # Calculate denominators
+    x_sq_diff = sum((a - x_mean) ** 2 for a in x)
+    y_sq_diff = sum((b - y_mean) ** 2 for b in y)
+    denominator = math.sqrt(x_sq_diff * y_sq_diff)
+    correlation = numerator / denominator
+
+    return correlation
 
 
 class LLMABBA:
@@ -117,7 +131,7 @@ class LLMABBA:
 
     def process(self, project_name, data, task, prompt, model_tokenizer,
                 seq_len_pre = 24, scalar="z-score",
-                seq_len_post = 24, alphabet_set=None)-> None:
+                seq_len_post = 24, alphabet_set=None, draw_ts = False)-> None:
         """Load data and process data"""
 
         if alphabet_set is None:
@@ -151,8 +165,29 @@ class LLMABBA:
             Y_data = data['Y_data']
 
             symbols = self.xabba.fit_transform(X_data, alphabet_set=self.alphabet_set)
-            reconstruction = self.xabba.inverse_transform(symbols)
-            # reconst_same_shape = self.xabba.recast_shape(reconstruction)  # recast into original shape
+            if draw_ts is True:
+                reconstruction = self.xabba.inverse_transform(symbols)
+                reconst_same_shape = self.xabba.recast_shape(reconstruction)  # recast into original shape
+
+                plt.plot(X_data[0,:], label='Ground Truth')
+                plt.plot(reconst_same_shape[0.:], label='Reconstruction')
+
+                Cross_Correlation = cross_correlation(
+                    X_data[0,:],
+                    reconst_same_shape[0.:])
+                plt.rcParams.update({'font.size': 20})
+                # plt.title('Cross Correlation: ' + str("{:.3}".format(Cross_Correlation)), fontsize=20)
+                plt.title('A Classification Task Before LLM-ABBA', fontsize=20)
+                plt.xlabel('Inout Length', fontsize=20)
+                plt.ylabel('Feature', fontsize=20)
+
+                plt.legend()
+                plt.grid(True, axis='y')
+                plt.tight_layout()
+                # plt.savefig('Compression_Reproduction_img_S' + str(i_reconst) + '_Feature' + str(i_plot) + '.jpg')
+                plt.show()
+                # plt.close()
+                ##################################################################
 
             symbols_convert = []
             for i_data in range(len(symbols)):
@@ -176,8 +211,30 @@ class LLMABBA:
             Y_data = data['Y_data']
 
             symbols = self.xabba.fit_transform(X_data, alphabet_set=self.alphabet_set)
-            # reconstruction = self.xabba.inverse_transform(symbols)
-            # reconst_same_shape = self.xabba.recast_shape(reconstruction)  # recast into original shape
+            if draw_ts is True:
+                reconstruction = self.xabba.inverse_transform(symbols)
+                reconst_same_shape = self.xabba.recast_shape(reconstruction)  # recast into original shape
+
+                plt.plot(X_data[0,:], label='Ground Truth')
+                plt.plot(reconst_same_shape[0.:], label='Reconstruction')
+
+                Cross_Correlation = cross_correlation(
+                    X_data[0,:],
+                    reconst_same_shape[0.:])
+                plt.rcParams.update({'font.size': 20})
+                # plt.title('Cross Correlation: ' + str("{:.3}".format(Cross_Correlation)), fontsize=20)
+                plt.title('A Regression Task Before LLM-ABBA', fontsize=20)
+                plt.xlabel('Inout Length', fontsize=20)
+                plt.ylabel('Feature', fontsize=20)
+
+                plt.legend()
+                plt.grid(True, axis='y')
+                plt.tight_layout()
+                # plt.savefig('Compression_Reproduction_img_S' + str(i_reconst) + '_Feature' + str(i_plot) + '.jpg')
+                plt.show()
+                # plt.close()
+                ##################################################################
+
 
             symbols_convert = []
             for i_data in range(len(symbols)):
@@ -195,6 +252,7 @@ class LLMABBA:
                 [data_scaled.shape[0] - (self.seq_len_pre + self.seq_len_post), self.seq_len_pre,
                  data_scaled.shape[1]],
                 dtype=float)
+
             Y_Train_data_patch = np.zeros(
                 [data_scaled.shape[0] - (self.seq_len_pre + self.seq_len_post), self.seq_len_post,
                  data_scaled.shape[1]],
@@ -207,15 +265,52 @@ class LLMABBA:
                                                          i_data_patch + self.seq_len_pre:i_data_patch + self.seq_len_pre + self.seq_len_post,
                                                          :]
 
+            test_blank_index = []
+            for i_list in range(len(self.alphabet_set)):
+                if ('▁▁' in self.alphabet_set[i_list]):
+                    test_blank_index.append(i_list)
+            del_index1 = np.array(test_blank_index, dtype=int)
+            vocab_list_processed = [vocab_list[num] for num, i in enumerate(vocab_list) if num not in del_index1]
+            self.alphabet_set = vocab_list_processed
+
             symbols_train_data = self.xabba.fit_transform(X_Train_data_patch, alphabet_set=self.alphabet_set, llm_split='Pre')
-            # reconstruction_train_data = qabba.inverse_transform(symbols_train_data)
-            # train_data_same_shape = qabba.recast_shape(reconstruction_train_data,
-            #                                            llm_split='Pre')  # recast into original shape
 
             symbols_train_target, params_train_target = self.xabba.transform(Y_Train_data_patch, llm_split='Post')
-            # reconstruction_train_target = qabba.inverse_transform(symbols_train_target, params_train_target)
-            # train_target_same_shape = qabba.recast_shape(reconstruction_train_target, recap_shape=Y_Train_data_patch.shape,
-            #                                              llm_split='Post')  # recast into original shape
+
+            if draw_ts is True:
+                reconstruction_train_data = self.xabba.inverse_transform(symbols_train_data)
+                train_data_same_shape = self.xabba.recast_shape(reconstruction_train_data, llm_split='Pre')  # recast into original shape
+
+                reconstruction_train_target = self.xabba.inverse_transform(symbols_train_target, params_train_target)
+                train_target_same_shape = self.xabba.recast_shape(reconstruction_train_target, recap_shape=Y_Train_data_patch.shape, llm_split='Post')  # recast into original shape
+
+                ##################################################################
+                Y_true_pre = self.scaler.inverse_transform(X_Train_data_patch[0, :, :])
+                Y_true_post = self.scaler.inverse_transform(Y_Train_data_patch[0, :, :])
+
+                Y_recons_pre = self.scaler.inverse_transform(train_data_same_shape[0, :, :])
+                Y_recons_post = self.scaler.inverse_transform(train_target_same_shape[0, :, :])
+
+                plt.plot(np.concatenate((Y_true_pre[:, 0], Y_true_post[:, 0]), axis=0), label='Ground Truth')
+                plt.plot(np.concatenate((Y_recons_pre[:, 0], Y_recons_post[:, 0]), axis=0),
+                         label='Reconstruction')
+
+                Cross_Correlation = cross_correlation(
+                    np.concatenate((Y_true_pre[:, 0], Y_true_post[:, 0]), axis=0),
+                    np.concatenate((Y_recons_pre[:, 0], Y_recons_post[:, 0]), axis=0))
+                plt.rcParams.update({'font.size': 20})
+                # plt.title('Cross Correlation: ' + str("{:.3}".format(Cross_Correlation)), fontsize=20)
+                plt.title('A Forecasting Task Before LLM-ABBA', fontsize=20)
+                plt.xlabel('Inout Length', fontsize=20)
+                plt.ylabel('Feature', fontsize=20)
+
+                plt.legend()
+                plt.grid(True, axis='y')
+                plt.tight_layout()
+                # plt.savefig('Compression_Reproduction_img_S' + str(i_reconst) + '_Feature' + str(i_plot) + '.jpg')
+                plt.show()
+                # plt.close()
+                ##################################################################
 
             train_data_symbolic = []
             for i_data in range(len(symbols_train_data)):
@@ -395,9 +490,8 @@ class LLMABBA:
     def train(self, model_input, num_epochs, output_dir, train_dataset, val_dataset):
         """Train with validation"""
         if torch.cuda.device_count() > 1:  # If more than 1 GPU
-            model.is_parallelizable = True
-            model.model_parallel = True
-
+            model_input.is_parallelizable = True
+            model_input.model_parallel = True
 
         run_name = self.task + "-" + self.model_name
 
@@ -432,13 +526,12 @@ class LLMABBA:
 
         model_input.config.use_cache = False  # silence the warnings. Please re-enable for inference!
         trainer.train()
-        return self
 
 
     def inference(self, project_name, data, task, prompt, ft_model, model_tokenizer, scalar="z-score",
                   seq_len_pre = 24, seq_len_post = 24,
                   llm_max_length=1024, llm_repetition_penalty=1.7,
-                  llm_temperature=0.0, llm_max_new_tokens=256,
+                  llm_temperature=0.0, llm_max_new_tokens=256, draw_ts = False
                 )-> None:
         """Inference """
 
@@ -469,17 +562,15 @@ class LLMABBA:
         elif task == "forecasting":
             data_scaled = self.scaler.transform(data)
             symbols_test_data, params_test_data = self.xabba.transform(data_scaled, llm_split='Post')
-            # reconstruction_test_data = qabba_load.inverse_transform(symbols_test_data, params_test_data)
-            # test_data_same_shape = qabba_load.recast_shape(reconstruction_test_data,
-            #                                                recap_shape=scaled_test_data.shape,
-            #                                                llm_split='Post')  # recast into original shape
+            reconstruction_test_data = self.xabba_load.inverse_transform(symbols_test_data, params_test_data)
+            test_data_same_shape = self.xabba.recast_shape(reconstruction_test_data,
+                                                           recap_shape=data_scaled.shape,
+                                                           llm_split='Post')  # recast into original shape
 
         else:
             print("The task is UNKNOWN!")
             pass
 
-
-        print(symbols_test_data[0])
         test_data_symbolic = ListToString(list(symbols_test_data[0]))
 
         if prompt is not None:
@@ -503,16 +594,49 @@ class LLMABBA:
             skip_special_tokens=True
         )
 
-
         if (task == "classification") or (task == "regression"):
             return llm_out
 
         elif task == "forecasting":
-            split_content = llm_out.split('Results:')
+            split_content = llm_out.split('### Results:')
             listed_split_content = StringToList(split_content[1])
 
-            reconst_test_output = self.xabba.inverse_transform(listed_split_content, params_test_data)  # convert into array
-            reconst_same_shape_output = self.xabba.recast_shape(reconst_test_output, recap_shape=[seq_len_post, 7], llm_split='Post')
+            ################################################################## Rescue
+            tokens_output_mistral = listed_split_content[1:-1]
+            model_output_list2_processed = tokens_output_mistral
+            for symbols_i in range(len(tokens_output_mistral)):
+                if tokens_output_mistral[symbols_i] not in self.xabba.parameters.alphabets:
+                    if symbols_i == 0:
+                        model_output_list2_processed[symbols_i] = tokens_output_mistral[-1]
+                    else:
+                        model_output_list2_processed[symbols_i] = tokens_output_mistral[symbols_i - 1]
+
+
+            reconst_test_output = self.xabba.inverse_transform(model_output_list2_processed, params_test_data)  # convert into array
+            reconst_same_shape_output = self.xabba.recast_shape(reconst_test_output, recap_shape=[seq_len_post, data_scaled.size()[2]], llm_split='Post')
             forecasting_out = self.scaler.inverse_transform(reconst_same_shape_output)
+
+
+            # if draw_ts is True:
+                # ##################################################################
+                # plt.plot(np.concatenate((Y_true_pre[:, i_plot], Y_true_post[:, i_plot]), axis=0), label='Ground Truth')
+                # plt.plot(np.concatenate((Y_recons_pre[:, i_plot], Y_recons_post[:, i_plot]), axis=0),
+                #          label='Reconstruction')
+                #
+                # Cross_Correlation = cross_correlation(
+                #     np.concatenate((Y_true_pre[:, i_plot], Y_true_post[:, i_plot]), axis=0),
+                #     np.concatenate((Y_recons_pre[:, i_plot], Y_recons_post[:, i_plot]), axis=0))
+                # plt.rcParams.update({'font.size': 20})
+                # plt.title('Cross Correlation: ' + str("{:.3}".format(Cross_Correlation)), fontsize=20)
+                # plt.xlabel('Inout Length', fontsize=20)
+                # plt.ylabel('Feature ' + str(i_plot + 1), fontsize=20)
+                #
+                # plt.legend()
+                # plt.grid(True, axis='y')
+                # plt.tight_layout()
+                # # plt.savefig('Compression_Reproduction_img_S' + str(i_reconst) + '_Feature' + str(i_plot) + '.jpg')
+                # plt.show()
+                # # plt.close()
+                # ##################################################################
 
             return forecasting_out
