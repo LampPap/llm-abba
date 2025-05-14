@@ -212,13 +212,13 @@ def symbolsAssign(clusters, alphabet_set=0):
     # else:
     #     alphabets = alphabets[:N]
 
-    if N >= len(alphabets) and len(alphabets) == 32000:
+    if N > len(alphabets) and len(alphabets) == 32000:
         print("############################  Change the Alphabet  ############################")
         print("How many new alphabet needed : " + str(N - 32000))
         needed_alphabet_len = N - 32000
         for i in range(0, needed_alphabet_len):
             alphabets.append(str(i) + 'ABBA')
-    elif N >= len(alphabets) and len(alphabets) != 32000:
+    elif N > len(alphabets) and len(alphabets) != 32000:
         print("The length of used symbols is: " + str(N))
         alphabets = [chr(i + 33) for i in range(0, N)]
     else:
