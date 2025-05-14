@@ -1,5 +1,5 @@
 __version__ = '0.0.3'
-from .abba import ABBA, XABBA, fastXABBA, fastXABBA_len, fastXABBA_inc
+from .xabba import ABBA, XABBA, fastXABBA, fastXABBA_len, fastXABBA_inc
 
 from .compfp import compress
 from .agg import aggregate 
