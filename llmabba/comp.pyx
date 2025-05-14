@@ -41,12 +41,12 @@ cpdef compress(double[:] ts, double tol=0.5, double max_len=np.finfo(float).max)
         err = sum([(t_st + (inc/(end-start))*x[0:end-start+1][i] - ts[start:end+1][i])**2 for i in range(end-start+1)])
         
         if (err <= (tol**2)*(end-start-1) + epsilon) and (end-start-1 < max_len):
-            (last_t_ed, lasterr) = (t_ed, err) 
+            (last_t_ed, lastinc, lasterr) = (t_ed, inc, err)
             end = end + 1
         else:
-            pieces.append([end-start-1, last_t_ed, lasterr])
+            pieces.append([end-start-1, last_t_ed, lastinc, lasterr])
             start = end - 1
 
-    pieces.append([end-start-1, last_t_ed, lasterr])
+    pieces.append([end-start-1, last_t_ed, lastinc, lasterr])
 
     return np.asarray(pieces)

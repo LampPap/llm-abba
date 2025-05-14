@@ -19,11 +19,11 @@ import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
-from .comp import compress
-from .agg import aggregate 
+
 from .inverse import *
 from .quant import QUANT
-
+from .comp import compress
+from .agg import aggregate 
 import numpy as np
 import warnings 
 
