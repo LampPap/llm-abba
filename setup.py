@@ -70,7 +70,6 @@ setup_args = {
         "requests",
         "pandas",
         "scikit-learn",
-        "pychop",
         "cython>=0.27",
         "joblib>=1.1.1",
         "transformers",
