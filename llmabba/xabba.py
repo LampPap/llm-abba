@@ -13,7 +13,7 @@ import multiprocessing as mp
 import pandas, collections
 from sklearn.cluster import KMeans
 from .fkmns import sampledKMeansInter
-
+from .quant import QUANT
 from joblib import parallel_backend
 import warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -139,13 +139,20 @@ def get_cpu_affinity():
         
     return None
 
-from .inversefp import *
-from .compfp import compress
-from .quant import QUANT
 
-from .agg import aggregate 
-import numpy as np
-import warnings 
+
+try:
+    # # %load_ext Cython
+    # !python3 setup.py build_ext --inplace
+    from .compfp import compress
+    from .aggfp import aggregate 
+    from .inversefp import *
+        
+except ModuleNotFoundError:
+    warnings.warn("cython fail.")
+    from .comp import compress
+    from .agg import aggregate
+    from .inverset import *
 
 
 
