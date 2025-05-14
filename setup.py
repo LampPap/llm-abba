@@ -23,7 +23,7 @@ log = logging.getLogger(__file__)
 ext_errors = (CCompilerError, DistutilsExecError, DistutilsPlatformError, IOError, SystemExit)
 
 def get_version(fname):
-    version = '0.0.1'
+    version = '0.0.2'
     package = 'llmabba'
     try:
         with open(fname) as f:
@@ -51,7 +51,7 @@ class CustomBuildExtCommand(build_ext):
         build_ext.run(self)
 
 # Check for .pyx files
-pyx_files = ['llmabba/comp.pyx', 'llmabba/agg.pyx', 'llmabba/inverse.pyx']
+pyx_files = ['llmabba/compfp.pyx', 'llmabba/agg.pyx', 'llmabba/inversefp.pyx']
 for pyx_file in pyx_files:
     if not os.path.exists(pyx_file):
         log.error(f"Cython file {pyx_file} not found!")
@@ -100,9 +100,9 @@ setup_args = {
 }
 
 # Define Cython extensions
-comp = Extension('llmabba.comp', sources=['llmabba/comp.pyx'])
-agg = Extension('llmabba.agg', sources=['llmabba/agg.pyx'])
-inverse = Extension('llmabba.inverse', sources=['llmabba/inverse.pyx'])
+comp = Extension('llmabba.compfp', sources=['llmabba/compfp.pyx'])
+agg = Extension('llmabba.aggfp', sources=['llmabba/agg.pyx'])
+inverse = Extension('llmabba.inversefp', sources=['llmabba/inversefp.pyx'])
 
 try:
     log.info("Attempting to build with Cython extensions")

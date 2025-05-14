@@ -5,7 +5,7 @@ from torch.distributed.fsdp.fully_sharded_data_parallel import FullOptimStateDic
 from peft import LoraConfig, PeftModel, prepare_model_for_kbit_training, get_peft_model, TaskType
 from sklearn import preprocessing
 import numpy as np
-from .abba import XABBA
+from .xabba import XABBA
 import pickle
 import os
 import torch
