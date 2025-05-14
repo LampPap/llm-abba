@@ -21,7 +21,6 @@ Requires-Dist: scipy>=0.7.0
 Requires-Dist: requests
 Requires-Dist: pandas
 Requires-Dist: scikit-learn
-Requires-Dist: pychop
 Requires-Dist: cython>=0.27
 Requires-Dist: joblib>=1.1.1
 Requires-Dist: transformers

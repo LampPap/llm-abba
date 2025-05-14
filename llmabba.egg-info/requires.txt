@@ -3,7 +3,6 @@ scipy>=0.7.0
 requests
 pandas
 scikit-learn
-pychop
 cython>=0.27
 joblib>=1.1.1
 transformers
