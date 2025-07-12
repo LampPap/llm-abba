@@ -101,7 +101,7 @@ setup_args = {
 
 # Define Cython extensions
 comp = Extension('llmabba.compfp', sources=['llmabba/compfp.pyx'])
-agg = Extension('llmabba.aggfp', sources=['llmabba/agg.pyx'])
+agg = Extension('llmabba.aggfp', sources=['llmabba/aggfp.pyx'])
 inverse = Extension('llmabba.inversefp', sources=['llmabba/inversefp.pyx'])
 
 try:

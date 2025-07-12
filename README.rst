@@ -1,49 +1,49 @@
 LLM-ABBA
 ========
 
-|pip| |pipd| |cython| |Documentation Status| |license| 
+.. image:: https://img.shields.io/pypi/v/llmabba?color=lightsalmon
+   :alt: PyPI Version
+   :target: https://pypi.org/project/llmabba/
 
-.. |pip| image:: https://img.shields.io/pypi/v/llmabba?color=lightsalmon
+.. image:: https://img.shields.io/pypi/dm/llmabba.svg?label=PyPI%20downloads
+   :alt: PyPI Downloads
+   :target: https://pypi.org/project/llmabba/
+
+.. image:: https://img.shields.io/badge/Cython_Support-Accelerated-blue?style=flat&logoColor=cyan&labelColor=cyan&color=black
+   :alt: Cython Support
    :target: https://github.com/inEXASCALE/llm-abba
 
-.. |pipd| image:: https://img.shields.io/pypi/dm/llmabba.svg?label=PyPI%20downloads
-   :target: https://github.com/inEXASCALE/llm-abba
-
-.. |cython| image:: https://img.shields.io/badge/Cython_Support-Accelerated-blue?style=flat&logoColor=cyan&labelColor=cyan&color=black
-   :target: https://github.com/inEXASCALE/llm-abba
-
-.. |Documentation Status| image:: https://readthedocs.org/projects/llm-abba/badge/?version=latest
+.. image:: https://readthedocs.org/projects/llm-abba/badge/?version=latest
+   :alt: Documentation Status
    :target: https://llm-abba.readthedocs.io/en/latest/
 
+.. image:: https://img.shields.io/github/license/inEXASCALE/llm-abba
+   :alt: License
+   :target: https://github.com/inEXASCALE/llm-abba/blob/main/LICENSE
 
-.. |license| image:: https://anaconda.org/conda-forge/classixclustering/badges/license.svg
-   :target: https://github.com/inEXASCALE/llm-abba/blob/master/LICENSE
+`llmabba` is a software framework for time series analysis using Large Language Models (LLMs) based on symbolic representation, as introduced in the paper `LLM-ABBA: Symbolic Time Series Approximation using Large Language Models <https://arxiv.org/abs/2411.18506>`_.
 
+Time series analysis involves identifying patterns, trends, and structures within data sequences. Traditional methods like discrete wavelet transforms or symbolic aggregate approximation (SAX) convert continuous time series into symbolic representations for better analysis and compression. However, these methods often struggle with complex patterns.
 
-``llmabba`` is an software framework designed for performing time series application using Large Language Models (LLMs) based on symbolic representation, as introduced in the paper:
-`LLM-ABBA: Symbolic Time Series Approximation using Large Language Models <https://arxiv.org/abs/2411.18506>`_.
+`llmabba` enhances these techniques by leveraging LLMs, which excel in pattern recognition and sequence prediction. By applying LLMs to symbolic time series, `llmabba` discovers rich, meaningful representations, offering:
 
-Time series analysis often involves identifying patterns, trends, and structures within sequences of data points. Traditional methods, such as discrete wavelet transforms or symbolic aggregate approximation (SAX), have demonstrated success in converting continuous time series into symbolic representations, facilitating better analysis and compression. However, these methods are often limited in their ability to capture complex and subtle patterns.
-
-``llmabba`` builds upon these techniques by incorporating the power of large language models, which have been shown to excel in pattern recognition and sequence prediction tasks. By applying LLMs to symbolic time series representation, ``llmabba`` is able to automatically discover rich, meaningful representations of time series data. This approach offers several advantages:
-
-- **Higher accuracy and compression**: ``llmabba`` achieves better symbolic representations by leveraging LLMs' ability to understand and generate sequences, resulting in higher data compression and more accurate representation of underlying patterns.
-- **Adaptability**: The use of LLMs enables the framework to adapt to various types of time series data, allowing for robust performance across different domains such as finance, healthcare, and environmental science.
-- **Scalability**: ``llmabba`` is designed to efficiently handle large-scale time series datasets, making it suitable for both small and big data applications.
-- **Automatic feature discovery**: By harnessing the power of LLMs, ``llmabba`` can discover novel features and patterns in time series data that traditional symbolic approaches might miss.
-
-In summary, ``llmabba`` represents a significant advancement in symbolic time series analysis, combining the power of modern machine learning techniques with established methods to offer enhanced compression, pattern recognition, and interpretability.
+- **Higher accuracy and compression**: Better symbolic representations via LLMs, improving data compression and pattern accuracy.
+- **Adaptability**: Robust performance across domains like finance, healthcare, and environmental science.
+- **Scalability**: Efficient handling of large-scale time series datasets.
+- **Automatic feature discovery**: Uncovers novel patterns that traditional methods may miss.
 
 Key Features
 ------------
-- **Symbolic Time Series Approximation**: Converts time series data into symbolic representations.
-- **LLM-Powered Encoding**: Utilizes LLMs to enhance compression and pattern discovery.
-- **Efficient and Scalable**: Designed to work with large-scale time series datasets.
-- **Flexible Integration**: Compatible with various machine learning and statistical analysis workflows.
+- Symbolic Time Series Approximation: Converts time series into symbolic representations.
+- LLM-Powered Encoding: Enhances compression and pattern discovery.
+- Efficient and Scalable: Suitable for large-scale datasets.
+- Flexible Integration: Compatible with machine learning and statistical workflows.
 
 Installation
 ------------
-To set up virtual environment, there are two ways to setup virtual enviroment for testing ``llmabba``, the first one is:
+To set up a virtual environment, use one of these methods:
+
+**Using venv**:
 
 .. code-block:: bash
 
@@ -51,170 +51,143 @@ To set up virtual environment, there are two ways to setup virtual enviroment fo
    python -m venv ~/.myenv
    source ~/.myenv/bin/activate
 
-The second one is via conda:
+**Using conda**:
 
 .. code-block:: bash
 
    conda create -n myenv
    conda activate myenv
 
-
-Then, ``llmabba`` can be installed via pip:
+Install `llmabba` via pip:
 
 .. code-block:: bash
 
-    pip install llmabba
-
-
+   pip install llmabba
 
 Usage
 -----
+Refer to the documentation and the `examples` folder for detailed usage.
 
-For details of usage, please refer to the documentation and folder ``examples``.
-
-
-
-``llmabba`` uses quantized ABBA with fixed-point adaptive piecewise linear continuous approximation (FAPCA). One would like to independently try quantized ABBA (with FAPCA), we provide independent interface:
+To use quantized ABBA with fixed-point adaptive piecewise linear continuous approximation (FAPCA):
 
 .. code-block:: python
 
    from llmabba import ABBA
-   
-   ts = [[1.2, 1.4, 1.3, 1.8, 2.2, 2.4, 2.1], [1.2,  1.3, 1.2, 2.2, 1.4, 2.4, 2.1]]
+
+   ts = [[1.2, 1.4, 1.3, 1.8, 2.2, 2.4, 2.1], [1.2, 1.3, 1.2, 2.2, 1.4, 2.4, 2.1]]
    abba = ABBA(tol=0.1, alpha=0.1)
    symbolic_representation = abba.encode(ts)
    print("Symbolic Representation:", symbolic_representation)
    reconstruction = abba.decode(symbolic_representation)
    print("Reconstruction:", reconstruction)
 
-
-
-For more details, please refer to the documentation in [examples](./examples).
-
-If you are doing a time series classification task, 
+For time series classification:
 
 .. code-block:: python
-   
-   import os
-   import argparse
+
    import pandas as pd
    import numpy as np
-   import llmabba.llmabba
    from llmabba.llmabba import LLMABBA
    from sklearn.model_selection import train_test_split
-   
-   ## Define the project name, task, model name, and prompt.  
+
    project_name = "PTBDB"
-   task_tpye = "classification"  # classification, regression or forecasting
+   task_type = "classification"
    model_name = 'mistralai/Mistral-7B-Instruct-v0.1'
-   prompt_input = f"""This is a classification task. Identify the "ECG Abnormality" according to the given "Symbolic Series"."""
-   
-   ## Process the time series data and splite the datasets
+   prompt_input = """This is a classification task. Identify the 'ECG Abnormality' according to the given 'Symbolic Series'."""
+
+   # Load and process data
    abnormal_df = pd.read_csv('../test_data/ptbdb_abnormal.csv', header=None)
    normal_df = pd.read_csv('../test_data/ptbdb_normal.csv', header=None)
-   
-   abnormal_length = abnormal_df.shape[0]
-   normal_length = normal_df.shape[0]
-   
-   Y_data = np.concatenate((np.zeros([abnormal_length], dtype=int), np.ones([normal_length], dtype=int)), axis=0)
+
+   Y_data = np.concatenate((np.zeros([abnormal_df.shape[0]], dtype=int), np.ones([normal_df.shape[0]], dtype=int)))
    X_data = pd.concat([abnormal_df, normal_df]).to_numpy()
-   
-   arranged_seq = np.random.randint(len(Y_data), size=len(Y_data))
-   train_data_split = {'X_data':0, 'Y_data':0}
-   
-   train_data, test_data, train_target, test_target = train_test_split(X_data[arranged_seq, :], Y_data[arranged_seq], test_size=0.2)
-   
-   train_data_split['X_data'] = train_data[:500, :]
-   train_data_split['Y_data'] = train_target[:500]
-   
-   ## Using LLM-ABBA package to train the data with QLoRA 
+
+   arranged_seq = np.random.permutation(len(Y_data))
+   train_data, test_data, train_target, test_target = train_test_split(X_data[arranged_seq], Y_data[arranged_seq], test_size=0.2)
+
+   train_data_split = {'X_data': train_data[:500], 'Y_data': train_target[:500]}
+
+   # Train with LLM-ABBA
    LLMABBA_classification = LLMABBA()
    model_input, model_tokenizer = LLMABBA_classification.model(model_name=model_name, max_len=2048)
-   
+
    tokenized_train_dataset, tokenized_val_dataset = LLMABBA_classification.process(
-         project_name=project_name,
-         data=train_data_split,
-         task=task_tpye,
-         prompt=prompt_input,
-         alphabet_set=-1,
-         model_tokenizer=model_tokenizer,
-         scalar="z-score",
+       project_name=project_name,
+       data=train_data_split,
+       task=task_type,
+       prompt=prompt_input,
+       alphabet_set=-1,
+       model_tokenizer=model_tokenizer,
+       scalar="z-score"
    )
-   
+
    LLMABBA_classification.train(
-         model_input=model_input,
-         num_epochs=1,
-         output_dir='../save/',
-         train_dataset=tokenized_train_dataset,
-         val_dataset=tokenized_val_dataset
+       model_input=model_input,
+       num_epochs=1,
+       output_dir='../save/',
+       train_dataset=tokenized_train_dataset,
+       val_dataset=tokenized_val_dataset
    )
-   
-   
-   ##If you finished the training, YOU CAN *Directly* do the inference with LLM-ABBA
-   test_data = np.expand_dims(test_data[1, :], axis=0)
+
+   # Inference
+   test_data = np.expand_dims(test_data[1], axis=0)
    peft_model_input, model_tokenizer = LLMABBA_classification.model(
-      peft_file='../llm-abba-master/save/checkpoint-25/',
-      model_name=model_name,
-      max_len=2048)
-   
-   out_text = LLMABBA_classification.inference(
-      project_name=project_name,
-      data=test_data,
-      task=task_tpye,
-      prompt=prompt_input,
-      ft_model=peft_model_input,
-      model_tokenizer=model_tokenizer,
-      scalar="z-score",
-      llm_max_length=256,
-      llm_repetition_penalty=1.9,
-      llm_temperature=0.0,
-      llm_max_new_tokens=2,
+       peft_file='../llm-abba-master/save/checkpoint-25/',
+       model_name=model_name,
+       max_len=2048
    )
-   
+
+   out_text = LLMABBA_classification.inference(
+       project_name=project_name,
+       data=test_data,
+       task=task_type,
+       prompt=prompt_input,
+       ft_model=peft_model_input,
+       model_tokenizer=model_tokenizer,
+       scalar="z-score",
+       llm_max_length=256,
+       llm_repetition_penalty=1.9,
+       llm_temperature=0.0,
+       llm_max_new_tokens=2
+   )
+
    print(out_text)
 
 Visualization
 ------------
-Under developing...
+Currently under development.
 
+Common Questions
+---------------
+**1. Why are some LLM-generated tokens not recognized by ABBA?**
 
-Common Asked Questions
-------------
-**1. Each token generated by the LLM cannot be recognized by ABBA in the alphabet list.**
+LLM hallucination may generate tokens outside ABBA’s alphabet. Solutions include:
 
-The hallucination of LLMs is the main reason why you have this problem, but there are many ways to process it. The LLM will generate some tokens that ABBA cannot recognize, as when you are using ABBA to transform the time series, ABBA only use some tokens of LLMs. Therefore, ``inverse_transform`` cannot recognize the symbols that ABBA did not use in the ABBA tranform step. Some tricks can help:
+- **Method A**: Skip or replace unrecognized tokens, using `repetition_penalty=1.3` and `temperature=0.0`.
+- **Method B**: Use as many LLM tokens as possible (e.g., 32,000 for Mistral) to avoid this issue.
+- **Method C**: Use ASCII symbols instead of LLM tokens, specifying them in the prompt (under testing).
+- **Method D**: Fine-tune the LLM with `add_tokens` (not recommended).
 
-- **Method A**: Skip or replace the unrecognized symbols or tokens, as their appearance frenqucy is very low. Please use a lower ''repetition_penalty=1.3'' and ''temperature=0.0'' to avoid more generated tokens.
-- **Method B**: Depends on how many symbols or tokens you have used in the ABBA transform step, using as many symbols as you can. If possible, please fully use LLM tokens (e.g. when using Mistreal, the number of tokens is ''32000''), which can totally avoid this issue.
-- **Method C**: This way is still under testing (We do not sure how well LLMs know special symbols). For example, you can use some ASCII code symbols insead of using tokens of LLMs. Then, tell LLM that you are using some speical symbols in the prompt settings. In the first, you should make sure that LLM know how many special symbols. Secondly, only use these special symbols to transform times series. Lastly, use prompt (e.g.  ''prompt_input = This is a forecasting task. You are using special symbols. Forecast the "Electricity Transformer Temperature" according to the given "Symbolic Series".''
-- **Method D**: You can set ''add_tokens'' to fine tune your LLM with a tricky prompt. But this way is not recommended.
- 
-In the experiments, we first used ''Method B'' and utilized ''Method A'' as a rescue. 
+**2. Is inhibition level necessary?**
 
-**2. Is inhibition level a neccessary setting?**
-
-The inhibition mechanism of InA is able to adaptively fit downstream tasks, and it is better to adjust the preference of LLMs by increasing the threshold (inhibition level). Especially, when you are using ''Method C'', you can try a higher inhibition level. Then, LLMs would understand special symbols better.
-
-
+Adjusting the inhibition level helps LLMs adapt to downstream tasks, especially with special symbols (Method C).
 
 Contributing
 ------------
-We welcome contributions! If you'd like to improve LLM-ABBA, please follow these steps:
+To contribute:
 
 1. Fork the repository.
-2. Create a new branch for your feature or bugfix.
+2. Create a feature or bugfix branch.
 3. Submit a pull request.
 
 License
 -------
-LLM-ABBA is released under the MIT License.
+Released under the MIT License.
 
 Contact
 -------
-For questions or feedback, please reach out via GitHub issues or contact the authors of the paper.
-
-
+For questions, use GitHub issues or contact the paper’s authors.
 
 References
------------
-[1]Carson, E., Chen, X., and Kang, C., “: Understanding time series via symbolic approximation”, arXiv e-prints, arXiv:2411.18506, 2024. doi:10.48550/arXiv.2411.18506.
+----------
+- Carson, E., Chen, X., and Kang, C., "Understanding time series via symbolic approximation," arXiv:2411.18506, 2024. `doi:10.48550/arXiv.2411.18506 <https://arxiv.org/abs/2411.18506>`_.
