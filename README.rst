@@ -228,7 +228,6 @@ LLM-ABBA automatically saves the scaler and ABBA model during processing to ``..
 
 .. code-block:: python
 
-   # Saving (done automatically in process)
    from llmabba.llmabba import save_abba
    save_abba(LLMABBA_classification.xabba, "../save/PTBDB/classification_ABBA_save.pkl")
 
