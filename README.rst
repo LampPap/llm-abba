@@ -106,6 +106,7 @@ The `LLMABBA` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced ta
 
 
 **Key Steps**:
+
 #. Step 1. **Data Preparation**: Load numerical time series and labels, scale data (e.g., z-score or min-max), and split into training/validation sets.
 #. Step 2. **Processing**: Use ABBA to symbolize time series, then tokenize with the LLM's tokenizer.
 #. Step 3. **Training**: Fine-tune the LLM on the tokenized dataset using LoRA and FSDP.
