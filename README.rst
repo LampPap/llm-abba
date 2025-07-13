@@ -273,6 +273,8 @@ References
 
 Users of ``LLM-ABBA`` can cite:
 
+.. bibliography:: bibtex
+
 @misc{carson2024llmabbaunderstandingtimeseries,
       title={LLM-ABBA: Understanding time series via symbolic approximation}, 
       author={Erin Carson and Xinye Chen and Cheng Kang},
