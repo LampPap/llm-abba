@@ -58,7 +58,7 @@ To set up a virtual environment, use one of these methods:
    conda create -n myenv
    conda activate myenv
 
-Install `llmabba` via pip:
+Then, install `llmabba` via pip:
 
 .. code-block:: bash
 
