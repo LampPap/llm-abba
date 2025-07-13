@@ -68,7 +68,7 @@ Install `llmabba` via pip:
 Basic Usage: Symbolic Approximation with ABBA
 --------------------------------------------
 
-The `ABBA` class provides quantized symbolic approximation using Fixed-point Adaptive Piecewise Linear Continuous Approximation (FAPCA). It converts numerical time series into symbolic strings (e.g., letters like 'A', 'B' representing trends such as increasing or decreasing segments) and supports reconstruction back to numerical form. 
+The ``ABBA`` class provides quantized symbolic approximation using Fixed-point Adaptive Piecewise Linear Continuous Approximation (FAPCA). It converts numerical time series into symbolic strings (e.g., letters like 'A', 'B' representing trends such as increasing or decreasing segments) and supports reconstruction back to numerical form. 
 
 **Key Parameters**:
 - ``tol``: Tolerance for approximation error (smaller values increase segmentation granularity).
@@ -102,7 +102,7 @@ This example encodes two time series into symbolic strings and reconstructs them
 Advanced Usage: Time Series Tasks with LLMABBA
 ---------------------------------------------
 
-The `LLMABBA` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced tasks like classification, regression, and forecasting. It processes time series into symbolic representations, tokenizes them for LLM input, fine-tunes the model, and performs inference. The class supports 4-bit quantization (via BitsAndBytesConfig) and LoRA (Low-Rank Adaptation) for efficient fine-tuning, along with FSDP for distributed training. This guide provides a overview of LLM-ABBA's functionality, including installation, symbolic approximation with the `ABBA` class, and advanced tasks (classification, regression, forecasting) using the `LLMABBA` class. We refer to the GitHub repository (https://github.com/inEXASCALE/llm-abba) and the `examples` folder for additional details and parameter tuning.
+The ``LLMABBA`` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced tasks like classification, regression, and forecasting. It processes time series into symbolic representations, tokenizes them for LLM input, fine-tunes the model, and performs inference. The class supports 4-bit quantization (via BitsAndBytesConfig) and LoRA (Low-Rank Adaptation) for efficient fine-tuning, along with FSDP for distributed training. This guide provides a overview of LLM-ABBA's functionality, including installation, symbolic approximation with the `ABBA` class, and advanced tasks (classification, regression, forecasting) using the `LLMABBA` class. We refer to the GitHub repository (https://github.com/inEXASCALE/llm-abba) and the `examples` folder for additional details and parameter tuning.
 
 
 **Key Steps**:
