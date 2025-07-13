@@ -64,11 +64,37 @@ Install `llmabba` via pip:
 
    pip install llmabba
 
-Usage
------
-Refer to the documentation and the `examples` folder for detailed usage.
 
-To use quantized ABBA with fixed-point adaptive piecewise linear continuous approximation (FAPCA):
+Advanced Usage: Time Series Classification with LLMABBA
+------------------------------------------------------
+
+The ``LLMABBA`` class extends ABBA by incorporating LLMs (e.g., Mistral-7B) for downstream tasks like classification. It processes time series into symbolic representations, tokenizes them with an LLM tokenizer, fine-tunes the model on labeled data, and performs inference. This is ideal for tasks such as detecting abnormalities in ECG signals. Details is referred to the documentation and the `examples` folder.
+
+Key steps:
+1. Load and prepare data: Numerical time series (features) and labels.
+2. Process data: Scale (e.g., z-score), symbolize with ABBA, and tokenize for LLM input.
+3. Train: Fine-tune the LLM on the processed dataset.
+4. Inference: Generate predictions on new data.
+
+Input format for training (``process`` method):
+- ``data``: A dictionary with ``'X_data'`` (2D NumPy array: n_samples × time_series_length, floats) and ``'Y_data'`` (1D NumPy array: n_samples, integers or strings for labels).
+
+Input format for inference:
+- ``data``: 2D NumPy array (n_test_samples × time_series_length, floats; can be a single sample as (1, length)).
+
+Output:
+- Inference returns a string (e.g., predicted class label like "0" for abnormal or "Normal"), limited by parameters like ``llm_max_new_tokens``.
+
+Key parameters:
+- ``model_name``: LLM model (e.g., 'mistralai/Mistral-7B-Instruct-v0.1').
+- ``prompt_input``: Task-specific prompt guiding the LLM.
+- ``scalar``: Data scaling method (e.g., "z-score").
+- ``alphabet_set``: Controls symbol alphabet (-1 for automatic).
+- Training: ``num_epochs``, ``output_dir`` for checkpoints.
+- Inference: LLM generation params like ``llm_temperature`` (0.0 for deterministic), ``llm_max_new_tokens`` (limits output length).
+
+Example using the PTB Diagnostic ECG Database for binary classification (abnormal vs. normal):
+
 
 .. code-block:: python
 
