@@ -270,11 +270,11 @@ For questions, use GitHub issues or contact the paper’s authors.
 References
 ----------
 
-Users of ``LLM-ABBA`` can cite:
+Users of ``LLM-ABBA`` and ``ABBA`` can cite:
 
 .. bibliography:: bibtex
    
-   @misc{carson2024llmabbaunderstandingtimeseries,
+   @misc{carson2024,
          title={LLM-ABBA: Understanding time series via symbolic approximation}, 
          author={Erin Carson and Xinye Chen and Cheng Kang},
          year={2024},
@@ -282,4 +282,17 @@ Users of ``LLM-ABBA`` can cite:
          archivePrefix={arXiv},
          primaryClass={cs.LG},
          url={https://arxiv.org/abs/2411.18506}, 
+   }
+   
+   @article{10.1145/3532622,
+      author = {Chen, Xinye and G\"{u}ttel, Stefan},
+      title = {An Efficient Aggregation Method for the Symbolic Representation of Temporal Data},
+      year = {2023},
+      publisher = {Association for Computing Machinery},
+      address = {New York, NY, USA},
+      volume = {17},
+      number = {1},
+      doi = {10.1145/3532622},
+      journal = {ACM Trans. Knowl. Discov. Data},
+      numpages = {22},
    }
