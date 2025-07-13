@@ -270,4 +270,14 @@ For questions, use GitHub issues or contact the paper’s authors.
 
 References
 ----------
-- Carson, E., Chen, X., and Kang, C., "Understanding time series via symbolic approximation," arXiv:2411.18506, 2024. `doi:10.48550/arXiv.2411.18506 <https://arxiv.org/abs/2411.18506>`_.
+.. bibliography:: references.bib
+
+   @misc{carson2024llmabbaunderstandingtimeseries,
+         title={LLM-ABBA: Understanding time series via symbolic approximation}, 
+         author={Erin Carson and Xinye Chen and Cheng Kang},
+         year={2024},
+         eprint={2411.18506},
+         archivePrefix={arXiv},
+         primaryClass={cs.LG},
+         url={https://arxiv.org/abs/2411.18506}, 
+   }
