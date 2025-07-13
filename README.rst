@@ -70,7 +70,7 @@ Advanced Usage: Time Series Classification with LLMABBA
 
 The ``LLMABBA`` class extends ABBA by incorporating LLMs (e.g., Mistral-7B) for downstream tasks like classification. It processes time series into symbolic representations, tokenizes them with an LLM tokenizer, fine-tunes the model on labeled data, and performs inference. This is ideal for tasks such as detecting abnormalities in ECG signals. Details is referred to the documentation and the `examples` folder.
 
-Key steps:
+Key steps: 
 1. Load and prepare data: Numerical time series (features) and labels.
 2. Process data: Scale (e.g., z-score), symbolize with ABBA, and tokenize for LLM input.
 3. Train: Fine-tune the LLM on the processed dataset.
