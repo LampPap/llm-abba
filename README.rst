@@ -258,11 +258,7 @@ Adjusting the inhibition level helps LLMs adapt to downstream tasks, especially 
 
 Contributing
 ------------
-To contribute:
-
-1. Fork the repository.
-2. Create a feature or bugfix branch.
-3. Submit a pull request.
+We welcome contributions in any form! Assistance with documentation is always welcome. To contribute, feel free to open an issue or please fork the project make your changes and submit a pull request. We will do our best to work through any issues and requests.
 
 License
 -------
