@@ -102,7 +102,7 @@ This example encodes two time series into symbolic strings and reconstructs them
 Advanced Usage: Time Series Tasks with LLMABBA
 ---------------------------------------------
 
-The ``LLMABBA`` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced tasks like classification, regression, and forecasting. It processes time series into symbolic representations, tokenizes them for LLM input, fine-tunes the model, and performs inference. The class supports 4-bit quantization (via BitsAndBytesConfig) and LoRA (Low-Rank Adaptation) for efficient fine-tuning, along with FSDP for distributed training. This guide provides a overview of LLM-ABBA's functionality, including installation, symbolic approximation with the `ABBA` class, and advanced tasks (classification, regression, forecasting) using the `LLMABBA` class. We refer to the GitHub repository (https://github.com/inEXASCALE/llm-abba) and the `examples` folder for additional details and parameter tuning.
+The ``LLMABBA`` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced tasks like classification, regression, and forecasting. It processes time series into symbolic representations, tokenizes them for LLM input, fine-tunes the model, and performs inference. The class supports 4-bit quantization (via BitsAndBytesConfig) and LoRA (Low-Rank Adaptation) for efficient fine-tuning, along with FSDP for distributed training. This guide provides a overview of LLM-ABBA's functionality, including installation, symbolic approximation with the `ABBA` class, and advanced tasks (classification, regression, forecasting) using the ``LLMABBA`` class. We refer to the GitHub repository (https://github.com/inEXASCALE/llm-abba) and the `examples` folder for additional details and parameter tuning. For more details on the use of fABBA and ABBA, switch to GitHub repository (https://github.com/nla-group/fABBA). 
 
 
 **Key Steps**:
@@ -270,13 +270,13 @@ For questions, use GitHub issues or contact the paper’s authors.
 References
 ----------
 
-Users of ``LLM-ABBA`` and ``ABBA`` can cite:
+Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
 
 .. bibliography:: bibtex
    
    @misc{carson2024,
-         title={LLM-ABBA: Understanding time series via symbolic approximation}, 
          author={Erin Carson and Xinye Chen and Cheng Kang},
+         title={LLM-ABBA: Understanding time series via symbolic approximation}, 
          year={2024},
          eprint={2411.18506},
          archivePrefix={arXiv},
@@ -295,4 +295,15 @@ Users of ``LLM-ABBA`` and ``ABBA`` can cite:
       doi = {10.1145/3532622},
       journal = {ACM Trans. Knowl. Discov. Data},
       numpages = {22},
+   }
+
+   @article{Chen2024,
+      author = {Chen, Xinye and Güttel, Stefan}, 
+      title = {fABBA: A Python library for the fast symbolic approximation of time series}, 
+      doi = {10.21105/joss.06294},
+      year = {2024}, 
+      publisher = {The Open Journal}, 
+      volume = {9}, number = {95}, 
+      pages = {6294}, 
+      journal = {Journal of Open Source Software} 
    }
