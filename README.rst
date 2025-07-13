@@ -276,7 +276,7 @@ Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
    
    @misc{carson2024,
          author={Erin Carson and Xinye Chen and Cheng Kang},
-         title={LLM-ABBA: Understanding time series via symbolic approximation}, 
+         title={{LLM-ABBA}: Understanding time series via symbolic approximation}, 
          year={2024},
          eprint={2411.18506},
          archivePrefix={arXiv},
@@ -299,7 +299,7 @@ Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
 
    @article{Chen2024,
       author = {Chen, Xinye and Güttel, Stefan}, 
-      title = {fABBA: A Python library for the fast symbolic approximation of time series}, 
+      title = {{fABBA}: A Python library for the fast symbolic approximation of time series}, 
       doi = {10.21105/joss.06294},
       year = {2024}, 
       publisher = {The Open Journal}, 
