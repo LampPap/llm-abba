@@ -65,49 +65,88 @@ Install `llmabba` via pip:
    pip install llmabba
 
 
-Advanced Usage: Time Series Classification with LLMABBA
-------------------------------------------------------
+Basic Usage: Symbolic Approximation with ABBA
+--------------------------------------------
 
-The ``LLMABBA`` class extends ABBA by incorporating LLMs (e.g., Mistral-7B) for downstream tasks like classification. It processes time series into symbolic representations, tokenizes them with an LLM tokenizer, fine-tunes the model on labeled data, and performs inference. This is ideal for tasks such as detecting abnormalities in ECG signals. Details is referred to the documentation and the `examples` folder.
+The `ABBA` class provides quantized symbolic approximation using Fixed-point Adaptive Piecewise Linear Continuous Approximation (FAPCA). It converts numerical time series into symbolic strings (e.g., letters like 'A', 'B' representing trends such as increasing or decreasing segments) and supports reconstruction back to numerical form. 
 
-Key steps: 
-1. Load and prepare data: Numerical time series (features) and labels.
-2. Process data: Scale (e.g., z-score), symbolize with ABBA, and tokenize for LLM input.
-3. Train: Fine-tune the LLM on the processed dataset.
-4. Inference: Generate predictions on new data.
+**Key Parameters**:
+- ``tol``: Tolerance for approximation error (smaller values increase segmentation granularity).
+- ``alpha``: Quantization parameter (controls symbol assignment to segments).
+- ``init``: Initialization method for FAPCA (e.g., 'agg' for aggregation-based).
+- ``scl``: Scaling factor for approximation.
 
-Input format for training (``process`` method):
-- ``data``: A dictionary with ``'X_data'`` (2D NumPy array: n_samples × time_series_length, floats) and ``'Y_data'`` (1D NumPy array: n_samples, integers or strings for labels).
+**Input Format**:
+- A list of lists, where each inner list is a 1D time series of floating-point numbers (e.g., multiple time series samples).
 
-Input format for inference:
-- ``data``: 2D NumPy array (n_test_samples × time_series_length, floats; can be a single sample as (1, length)).
+**Output**:
+- ``encode``: Returns a list of symbolic strings (e.g., ['A B C'] for each time series).
+- ``decode``: Reconstructs the time series as a list of lists of floats, approximating the input.
 
-Output:
-- Inference returns a string (e.g., predicted class label like "0" for abnormal or "Normal"), limited by parameters like ``llm_max_new_tokens``.
-
-Key parameters:
-- ``model_name``: LLM model (e.g., 'mistralai/Mistral-7B-Instruct-v0.1').
-- ``prompt_input``: Task-specific prompt guiding the LLM.
-- ``scalar``: Data scaling method (e.g., "z-score").
-- ``alphabet_set``: Controls symbol alphabet (-1 for automatic).
-- Training: ``num_epochs``, ``output_dir`` for checkpoints.
-- Inference: LLM generation params like ``llm_temperature`` (0.0 for deterministic), ``llm_max_new_tokens`` (limits output length).
-
-Example using the PTB Diagnostic ECG Database for binary classification (abnormal vs. normal):
-
+**Example**:
 
 .. code-block:: python
 
    from llmabba import ABBA
 
+   # Sample time series data
    ts = [[1.2, 1.4, 1.3, 1.8, 2.2, 2.4, 2.1], [1.2, 1.3, 1.2, 2.2, 1.4, 2.4, 2.1]]
-   abba = ABBA(tol=0.1, alpha=0.1)
+   abba = ABBA(tol=0.1, alpha=0.1, init='agg', scl=3)
    symbolic_representation = abba.encode(ts)
    print("Symbolic Representation:", symbolic_representation)
    reconstruction = abba.decode(symbolic_representation)
    print("Reconstruction:", reconstruction)
 
-For time series classification:
+This example encodes two time series into symbolic strings and reconstructs them, with minor deviations based on ``tol``. The output can be used for pattern matching, compression, or visualization.
+
+Advanced Usage: Time Series Tasks with LLMABBA
+---------------------------------------------
+
+The `LLMABBA` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced tasks like classification, regression, and forecasting. It processes time series into symbolic representations, tokenizes them for LLM input, fine-tunes the model, and performs inference. The class supports 4-bit quantization (via BitsAndBytesConfig) and LoRA (Low-Rank Adaptation) for efficient fine-tuning, along with FSDP for distributed training. This guide provides a overview of LLM-ABBA's functionality, including installation, symbolic approximation with the `ABBA` class, and advanced tasks (classification, regression, forecasting) using the `LLMABBA` class. Refer to the GitHub repository (https://github.com/inEXASCALE/llm-abba) and the `examples` folder for additional workflows and parameter tuning.
+
+
+**Key Steps**:
+1. **Data Preparation**: Load numerical time series and labels, scale data (e.g., z-score or min-max), and split into training/validation sets.
+2. **Processing**: Use ABBA to symbolize time series, then tokenize with the LLM's tokenizer.
+3. **Training**: Fine-tune the LLM on the tokenized dataset using LoRA and FSDP.
+4. **Inference**: Generate predictions on new data, leveraging the fine-tuned model.
+
+**Input Format**:
+- **Training (``process`` method)**:
+  - ``data``: Dictionary with:
+    - ``'X_data'``: 2D NumPy array (n_samples × time_series_length, floats).
+    - ``'Y_data'``: 1D NumPy array (n_samples, integers/strings for classification, floats for regression).
+  - For forecasting, ``data`` is a 2D NumPy array, and the method creates input/output patches of lengths ``seq_len_pre`` and ``seq_len_post``.
+- **Inference**:
+  - ``data``: 2D NumPy array (n_test_samples × time_series_length, floats; can be (1, length) for a single sample).
+
+**Output**:
+- **Classification/Regression**: A string with the predicted class or value (e.g., "0" for abnormal, "Normal", or a numerical value).
+- **Forecasting**: A 2D NumPy array (seq_len_post × n_features, floats) with the predicted time series continuation.
+
+**Key Parameters**:
+- **Initialization**:
+  - ``abba_tol``, ``abba_alpha``, ``abba_init``, ``abba_scl``: ABBA parameters for symbolic approximation.
+  - ``lora_r``, ``lora_alpha``, ``lora_dropout``: LoRA parameters for fine-tuning.
+  - ``quant_process``: Enable 4-bit quantization (default: True).
+- **Processing**:
+  - ``project_name``: Identifier for saving models/scalers.
+  - ``task``: 'classification', 'regression', or 'forecasting'.
+  - ``prompt``: Task-specific instruction for the LLM.
+  - ``scalar``: Scaling method ('z-score' or 'min-max').
+  - ``alphabet_set``: Custom symbols or None (uses LLM tokenizer vocab).
+  - ``seq_len_pre``/``seq_len_post``: Sequence lengths for forecasting input/output.
+- **Training**:
+  - ``num_epochs``: Number of training epochs.
+  - ``output_dir``: Directory for saving checkpoints.
+- **Inference**:
+  - ``llm_max_new_tokens``: Maximum tokens for LLM output.
+  - ``llm_temperature``: Controls randomness (0.0 for deterministic).
+  - ``llm_repetition_penalty``: Penalizes repeated tokens.
+
+**Example: ECG Classification with PTBDB**
+
+This example demonstrates binary classification (abnormal vs. normal ECG signals) using the PTB Diagnostic ECG Database (~187 time points per sample).
 
 .. code-block:: python
 
@@ -178,6 +217,24 @@ For time series classification:
    )
 
    print(out_text)
+
+Saving and Loading Models
+-------------------------
+
+LLM-ABBA automatically saves the scaler and ABBA model during processing to ``../save/[project_name]/[task]_Scaler_save.pkl`` and ``../save/[project_name]/[task]_ABBA_save.pkl``. These are loaded during inference to ensure consistent scaling and symbolization.
+
+**Example**:
+
+.. code-block:: python
+
+   # Saving (done automatically in process)
+   from llmabba.llmabba import save_abba
+   save_abba(LLMABBA_classification.xabba, "../save/PTBDB/classification_ABBA_save.pkl")
+
+   # Loading
+   from llmabba.llmabba import load_abba
+   xabba = load_abba("../save/PTBDB/classification_ABBA_save.pkl")
+
 
 Visualization
 ------------
