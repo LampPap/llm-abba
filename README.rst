@@ -271,4 +271,14 @@ For questions, use GitHub issues or contact the paper’s authors.
 References
 ----------
 
-.. bibliography:: references.bib
+.. bibliography:: 
+
+   @misc{carson2024llmabbaunderstandingtimeseries,
+         title={LLM-ABBA: Understanding time series via symbolic approximation}, 
+         author={Erin Carson and Xinye Chen and Cheng Kang},
+         year={2024},
+         eprint={2411.18506},
+         archivePrefix={arXiv},
+         primaryClass={cs.LG},
+         url={https://arxiv.org/abs/2411.18506}, 
+   }
