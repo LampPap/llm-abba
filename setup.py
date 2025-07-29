@@ -65,6 +65,8 @@ setup_args = {
     'cmdclass': {'build_ext': CustomBuildExtCommand},
     'setup_requires': ["cython>=0.27", "numpy>=1.17.3"],
     'install_requires': [
+        "tf_keras",
+        "wandb",
         "numpy>=1.3.0",
         "scipy>=0.7.0",
         "requests",
