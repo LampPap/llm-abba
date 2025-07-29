@@ -147,7 +147,7 @@ The ``LLMABBA`` class integrates ABBA with LLMs (e.g., Mistral-7B) for advanced 
 
 **Example: ECG Classification with PTBDB**
 
-This example demonstrates binary classification (abnormal vs. normal ECG signals) using the PTB Diagnostic ECG Database (~187 time points per sample). To successfully run the example, one will need a Hugging Face account and obtain access to [Mistral-7B-Instruct-v0.1](https://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1):
+This example demonstrates binary classification (abnormal vs. normal ECG signals) using the PTB Diagnostic ECG Database (~187 time points per sample). To successfully run the example, one will need a Hugging Face account and obtain access to `Mistral-7B-Instruct-v0.1s <hhttps://huggingface.co/mistralai/Mistral-7B-Instruct-v0.1>`_:
 
 .. code-block:: python
 
