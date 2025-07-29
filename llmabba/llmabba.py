@@ -505,23 +505,22 @@ class LLMABBA:
                 per_device_train_batch_size=4,
                 gradient_checkpointing=True,
                 gradient_accumulation_steps=4,
-                learning_rate=2e-4,  # Want about 10x smaller than the Mistral learning rate
+                learning_rate=2e-4,
                 bf16=False,
                 optim="paged_adamw_8bit",
                 num_train_epochs=num_epochs,
                 weight_decay=0.00005,
-                evaluation_strategy="epoch",
+                eval_strategy="epoch",  # Updated from previous fix
                 save_strategy="epoch",
                 logging_strategy="epoch",
                 logging_dir="./logs",
                 load_best_model_at_end=True,
                 report_to="wandb",
                 save_total_limit=1,
-                do_eval=True,  # Perform evaluation at the end of training
-                # report_to="wandb",           # Comment this out if you don't want to use weights & baises
-                run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"  # Name of the W&B run (optional)
+                do_eval=True,
+                run_name=f"{run_name}-{datetime.now().strftime('%Y-%m-%d-%H-%M')}"
             ),
-            data_collator=DataCollatorForLanguageModeling(self.model_tokenizer, mlm=False),
+            data_collator=DataCollatorWithPadding(tokenizer=self.model_tokenizer),  # Changed
         )
 
         model_input.config.use_cache = False  # silence the warnings. Please re-enable for inference!
