@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: llmabba
-Version: 0.0.4
+Version: 0.0.5
 Summary: LLM-ABBA: mining time series via symbolic approximation and large language models
 Home-page: https://github.com/inEXASCALE/llmabba
 Author: Erin Carson, Xinye Chen, Cheng Kang
@@ -16,6 +16,8 @@ Classifier: Operating System :: Unix
 Classifier: Programming Language :: Python :: 3
 Description-Content-Type: text/x-rst
 License-File: LICENSE
+Requires-Dist: tf_keras
+Requires-Dist: wandb
 Requires-Dist: numpy>=1.3.0
 Requires-Dist: scipy>=0.7.0
 Requires-Dist: requests
@@ -80,28 +82,3 @@ Key Features
 - LLM-Powered Encoding: Enhances compression and pattern discovery.
 - Efficient and Scalable: Suitable for large-scale datasets.
 - Flexible Integration: Compatible with machine learning and statistical workflows.
-
-Installation
-------------
-To set up a virtual environment, use one of these methods:
-
-**Using venv**:
-
-.. code-block:: bash
-
-   mkdir ~/.myenv
-   python -m venv ~/.myenv
-   source ~/.myenv/bin/activate
-
-**Using conda**:
-
-.. code-block:: bash
-
-   conda create -n myenv
-   conda activate myenv
-
-Install `llmabba` via pip:
-
-.. code-block:: bash
-
-   pip install llmabba
