@@ -1,4 +1,4 @@
-__version__ = '0.0.4'
+__version__ = '0.0.5'
 from .xabba import ABBA, XABBA, fastXABBA, fastXABBA_len, fastXABBA_inc
 import warnings
 
