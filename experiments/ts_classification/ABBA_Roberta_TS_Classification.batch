@@ -1,0 +1,110 @@
+#!/bin/sh
+#SBATCH --partition=amdgpulong
+#SBATCH --time=72:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks-per-node=1 # tasks per node
+#SBATCH --mem-per-gpu=80000
+#SBATCH --job-name=C_TS_Roberta
+#SBATCH --err=Roberta_Ts_Classification_r256.err
+#SBATCH --out=Roberta_Ts_Classification_r256.out
+#SBATCH --mail-user=kangchen@fel.cvut.cz    # where send info about job
+#SBATCH --mail-type=ALL              # what to send, valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL
+
+/bin/hostname
+srun -l /bin/hostname
+srun -l /bin/pwd
+
+ml Python/3.10.8-GCCcore-12.2.0
+source /home/kangchen/QABBA-ECE/EnvABBA/bin/activate
+cd /home/kangchen/QABBA-ECE/
+
+lora_r=16
+ABBA_tol=0.0005
+ABBA_init='agg'
+ABBA_alpha=0.0005
+ABBA_scl=3
+#data_name=('eeg-eye-state' 'fnirs' 'mitbih')
+
+## roberta-large   llama2-7B   mistral-7B
+#for i in {0..2}
+#do
+#  echo ${data_name[$i]}
+#  python main-ts-classification.py \
+#  --model_name "mistral-7B" \
+#  --data_name 'mitbih' \
+#  --batch_size=4 \
+#  --lr=2e-4 \
+#  --lora_r=256 \
+#  --weight_decay=0.00001 \
+#  --epochs=20 \
+#  --ABBA_tol=0.05 \
+#  --ABBA_init='agg' \
+#  --ABBA_alpha=0.01 \
+#  --ABBA_scl=1 \
+#  --MAX_LENGTH 4096
+#done
+
+
+python main-ts-classification.py \
+--model_name "roberta-large" \
+--data_name 'eeg-eye-state' \
+--batch_size=4 \
+--lr=5e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=100 \
+--ABBA_tol=${ABBA_tol} \
+--ABBA_init=${ABBA_init} \
+--ABBA_alpha=${ABBA_alpha} \
+--ABBA_scl=${ABBA_scl} \
+--num_classes=2 \
+--MAX_LENGTH 256
+
+
+python main-ts-classification.py \
+--model_name "roberta-large" \
+--data_name 'ptbdb' \
+--batch_size=4 \
+--lr=5e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=100 \
+--ABBA_tol=${ABBA_tol} \
+--ABBA_init=${ABBA_init} \
+--ABBA_alpha=${ABBA_alpha} \
+--ABBA_scl=1 \
+--num_classes=2 \
+--MAX_LENGTH 128
+
+
+python main-ts-classification.py \
+--model_name "roberta-large" \
+--data_name 'mitbih' \
+--batch_size=4 \
+--lr=5e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=20 \
+--ABBA_tol=${ABBA_tol} \
+--ABBA_init=${ABBA_init} \
+--ABBA_alpha=${ABBA_alpha} \
+--ABBA_scl=${ABBA_scl} \
+--num_classes=5 \
+--MAX_LENGTH 128
+
+
+
+python main-ts-classification.py \
+--model_name "roberta-large" \
+--data_name 'fnirs' \
+--batch_size=4 \
+--lr=1e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=10 \
+--ABBA_tol=${ABBA_tol} \
+--ABBA_init=${ABBA_init} \
+--ABBA_alpha=${ABBA_alpha} \
+--ABBA_scl=1 \
+--num_classes=2 \
+--MAX_LENGTH 512

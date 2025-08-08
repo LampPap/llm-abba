@@ -1,0 +1,35 @@
+#!/bin/sh
+#SBATCH --partition=amdgpulong
+#SBATCH --time=72:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks-per-node=1 # tasks per node
+#SBATCH --mem-per-gpu=40000
+#SBATCH --job-name=UCR_Kmeans_Llama2
+#SBATCH --err=Llama2_UCR_Kmeans_0603.err
+#SBATCH --out=Llama2_UCR_Kmeans_0603.out
+#SBATCH --mail-user=kangchen@fel.cvut.cz    # where send info about job
+#SBATCH --mail-type=ALL              # what to send, valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL
+
+/bin/hostname
+srun -l /bin/hostname
+srun -l /bin/pwd
+
+ml Python/3.10.8-GCCcore-12.2.0
+ml CUDA/11.7.0
+source /home/kangchen/QABBA-ECE/EnvABBA/bin/activate
+cd /home/kangchen/QABBA-ECE/
+
+## roberta-large   llama2-7B   mistral-7B
+python main-ucr2018.py \
+--model_name "llama2-7B" \
+--batch_size=2 \
+--lr=2e-4 \
+--lora_r=16 \
+--weight_decay=0.00001 \
+--epochs=20 \
+--ABBA_tol=0.05 \
+--ABBA_init='k-means' \
+--ABBA_alpha=0.05 \
+--ABBA_scl=1 \
+--MAX_LENGTH 1024 \
+--UCR_data_num=1

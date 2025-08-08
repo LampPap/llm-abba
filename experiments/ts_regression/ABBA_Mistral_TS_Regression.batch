@@ -1,0 +1,61 @@
+#!/bin/sh
+#SBATCH --partition=amdgpuextralong
+#SBATCH --time=504:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks-per-node=1 # tasks per node
+#SBATCH --mem-per-gpu=80000
+#SBATCH --job-name=R_TS_Mistral
+#SBATCH --err=Mistral_Ts_Regression_r16_4096.err
+#SBATCH --out=Mistral_Ts_Regression_r16_4096.out
+#SBATCH --mail-user=kangchen@fel.cvut.cz    # where send info about job
+#SBATCH --mail-type=ALL              # what to send, valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL
+
+/bin/hostname
+srun -l /bin/hostname
+srun -l /bin/pwd
+
+ml Python/3.10.8-GCCcore-12.2.0
+source /home/kangchen/QABBA-ECE/EnvABBA/bin/activate
+cd /home/kangchen/QABBA-ECE/
+
+#data_name=('AppliancesEnergy' 'HouseholdPowerConsumption1' 'HouseholdPowerConsumption2' 'BenzeneConcentration'
+#             'BeijingPM25Quality' 'BeijingPM10Quality' 'LiveFuelMoistureContent' 'FloodModeling1'
+#             'FloodModeling2' 'FloodModeling3' 'AustraliaRainfall' 'PPGDalia' 'IEEEPPG' 'BIDMCRR' 'BIDMCHR' 'BIDMCSpO2'
+#             'NewsHeadlineSentiment' 'NewsTitleSentiment' 'Covid3Month')
+data_name=('BIDMC32RR' 'BIDMC32HR' 'BIDMC32SpO2' 'NewsHeadlineSentiment' 'NewsTitleSentiment' 'Covid3Month')
+lora_r=16
+
+
+## roberta-large   llama2-7B   mistral-7B
+for i in {0..15}
+do
+  echo ${data_name[$i]}
+  python main-ts-regression.py \
+  --model_name "mistral-7B" \
+  --data_name ${data_name[$i]} \
+  --batch_size=4 \
+  --lr=2e-4 \
+  --lora_r=${lora_r} \
+  --weight_decay=0.00001 \
+  --epochs=20 \
+  --ABBA_tol=0.05 \
+  --ABBA_init='agg' \
+  --ABBA_alpha=0.05 \
+  --ABBA_scl=1 \
+  --MAX_LENGTH 4096
+done
+
+
+python main-ts-regression.py \
+--model_name "mistral-7B" \
+--data_name "Covid3Month" \
+--batch_size=4 \
+--lr=2e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=20 \
+--ABBA_tol=0.05 \
+--ABBA_init='agg' \
+--ABBA_alpha=0.05 \
+--ABBA_scl=1 \
+--MAX_LENGTH 512

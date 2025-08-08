@@ -1,0 +1,92 @@
+#!/bin/sh
+#SBATCH --partition=amdgpulong
+#SBATCH --time=72:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks-per-node=1 # tasks per node
+#SBATCH --mem-per-gpu=80000
+#SBATCH --job-name=P_TS_Mistral_ETTm2
+#SBATCH --err=Mistral_TS_Prediction_ETTm2_r16.err
+#SBATCH --out=Mistral_TS_Prediction_ETTm2_r16.out
+#SBATCH --mail-user=kangchen@fel.cvut.cz    # where send info about job
+#SBATCH --mail-type=ALL              # what to send, valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL
+
+/bin/hostname
+srun -l /bin/hostname
+srun -l /bin/pwd
+
+ml Python/3.10.8-GCCcore-12.2.0
+source /home/kangchen/QABBA-ECE/EnvABBA/bin/activate
+cd /home/kangchen/QABBA-ECE/
+
+lora_r=16
+data_name='ETTm2'
+
+## roberta-large   llama2-7B   mistral-7B
+
+python main-ts-prediction.py \
+--model_name "mistral-7B" \
+--data_name ${data_name} \
+--data ${data_name} \
+--batch_size=4 \
+--lr=2e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=8 \
+--ABBA_tol=0.001 \
+--ABBA_init='agg' \
+--ABBA_alpha=0.001 \
+--ABBA_scl=3 \
+--MAX_LENGTH 168 \
+--seq_len 24
+
+
+python main-ts-prediction.py \
+--model_name "mistral-7B" \
+--data_name ${data_name} \
+--data ${data_name} \
+--batch_size=4 \
+--lr=2e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=8 \
+--ABBA_tol=0.001 \
+--ABBA_init='agg' \
+--ABBA_alpha=0.001 \
+--ABBA_scl=3 \
+--MAX_LENGTH 672 \
+--seq_len 96
+
+
+python main-ts-prediction.py \
+--model_name "mistral-7B" \
+--data_name ${data_name} \
+--data ${data_name} \
+--batch_size=4 \
+--lr=2e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=8 \
+--ABBA_tol=0.001 \
+--ABBA_init='agg' \
+--ABBA_alpha=0.001 \
+--ABBA_scl=3 \
+--MAX_LENGTH 1344 \
+--seq_len 192
+
+
+python main-ts-prediction.py \
+--model_name "mistral-7B" \
+--data_name ${data_name} \
+--data ${data_name} \
+--batch_size=4 \
+--lr=2e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=8 \
+--ABBA_tol=0.001 \
+--ABBA_init='agg' \
+--ABBA_alpha=0.001 \
+--ABBA_scl=3 \
+--MAX_LENGTH 2352 \
+--seq_len 336
+

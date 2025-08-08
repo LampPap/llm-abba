@@ -1,0 +1,41 @@
+#!/bin/sh
+#SBATCH --partition=amdgpulong
+#SBATCH --time=72:00:00
+#SBATCH --gres=gpu:1
+#SBATCH --ntasks-per-node=1 # tasks per node
+#SBATCH --mem-per-gpu=80000
+#SBATCH --job-name=P_TS_Llama2_ETTh1
+#SBATCH --err=Llama2_TS_Prediction_ETTh1_r16_input168_output96.err
+#SBATCH --out=Llama2_TS_Prediction_ETTh1_r16_input168_output96.out
+#SBATCH --mail-user=kangchen@fel.cvut.cz    # where send info about job
+#SBATCH --mail-type=ALL              # what to send, valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL
+
+/bin/hostname
+srun -l /bin/hostname
+srun -l /bin/pwd
+
+ml Python/3.10.8-GCCcore-12.2.0
+source /home/kangchen/QABBA-ECE/EnvABBA/bin/activate
+cd /home/kangchen/QABBA-ECE/
+
+data_name='ETTh1'
+lora_r=16
+seq_len=168
+pred_len=96
+## roberta-large   llama2-7B   mistral-7B
+
+python main-ts-prediction-168.py \
+--model_name "llama2-7B" \
+--data_name ${data_name} \
+--data ${data_name} \
+--batch_size=4 \
+--lr=2e-4 \
+--lora_r=${lora_r} \
+--weight_decay=0.00001 \
+--epochs=20 \
+--ABBA_tol=0.000040837 \
+--ABBA_init='agg' \
+--ABBA_alpha=0.000040837 \
+--ABBA_scl=3 \
+--seq_len=${seq_len} \
+--pred_len=${pred_len}
