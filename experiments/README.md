@@ -1,7 +1,5 @@
 ## Introduction
 
-Author: @ChengKang520
-
 Aimed at making LLMs understand time series (e.g. time series classification tasks, time series regression tasks, time series forecasting tasks, time series trend analysis, action planning tasks and so on) by fine-tuning a single GPU.
 
 A fine-tuned LLMABBA model encapsulates two core components: a symbolic approximation encoder and a language generator. During a symbols approximation process, we encode the time series input with the LLMs' tokens and pass it to the Fixed-point Adaptive Piecewise Linear Continuous Approximation (FAPCA) to extract relevant chain of logics (or patterns). Such contextualized inputs are then passed to the language generator.
