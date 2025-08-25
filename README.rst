@@ -265,7 +265,7 @@ Released under the MIT License.
 
 Contact
 -------
-For questions, use GitHub issues or contact the paper’s authors.
+For questions, use GitHub issues or contact the maintainers or paper’s authors.
 
 References
 ----------
@@ -307,3 +307,4 @@ Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
       pages = {6294}, 
       journal = {Journal of Open Source Software} 
    }
+
