@@ -12,7 +12,7 @@ llmabba/fkmns.py
 llmabba/inverse.py
 llmabba/inversefp.c
 llmabba/inversefp.pyx
-llmabba/llmabba.py
+llmabba/llm_abba.py
 llmabba/quant.py
 llmabba/xabba.py
 llmabba.egg-info/PKG-INFO
