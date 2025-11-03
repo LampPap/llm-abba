@@ -3,12 +3,14 @@ README.rst
 setup.py
 llmabba/__init__.py
 llmabba/agg.py
+llmabba/aggfp.c
 llmabba/aggfp.pyx
 llmabba/comp.py
 llmabba/compfp.c
 llmabba/compfp.pyx
 llmabba/fkmns.py
 llmabba/inverse.py
+llmabba/inversefp.c
 llmabba/inversefp.pyx
 llmabba/llmabba.py
 llmabba/quant.py
