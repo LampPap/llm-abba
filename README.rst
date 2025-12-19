@@ -1,21 +1,10 @@
 LLM-ABBA
 ========
 
-.. image:: https://img.shields.io/pypi/v/llmabba?color=lightsalmon
-   :alt: PyPI Version
-   :target: https://pypi.org/project/llmabba/
-
-.. image:: https://img.shields.io/pypi/dm/llmabba.svg?label=PyPI%20downloads
-   :alt: PyPI Downloads
-   :target: https://pypi.org/project/llmabba/
 
 .. image:: https://img.shields.io/badge/Cython_Support-Accelerated-blue?style=flat&logoColor=cyan&labelColor=cyan&color=black
    :alt: Cython Support
    :target: https://github.com/inEXASCALE/llm-abba
-
-.. image:: https://readthedocs.org/projects/llm-abba/badge/?version=latest
-   :alt: Documentation Status
-   :target: https://llm-abba.readthedocs.io/en/latest/
 
 .. image:: https://img.shields.io/github/license/inEXASCALE/llm-abba
    :alt: License
@@ -62,7 +51,7 @@ Then, install `llmabba` via pip:
 
 .. code-block:: bash
 
-   pip install llmabba
+   pip install .
 
 
 Basic Usage: Symbolic Approximation with ABBA
@@ -307,4 +296,5 @@ Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
       pages = {6294}, 
       journal = {Journal of Open Source Software} 
    }
+
 
