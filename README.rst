@@ -263,13 +263,11 @@ Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
 
 .. bibliography:: bibtex
    
-   @misc{carson2024,
-         author={Erin Carson and Xinye Chen and Cheng Kang},
+   @article{carson2024,
+         author={Xinye Chen and Erin Carson and Cheng Kang},
          title={{LLM-ABBA}: Understanding time series via symbolic approximation}, 
          year={2024},
-         eprint={2411.18506},
-         archivePrefix={arXiv},
-         primaryClass={cs.LG},
+         journal = {Accepted in IEEE Transactions on Signal Processing},
          url={https://arxiv.org/abs/2411.18506}, 
    }
    
@@ -296,5 +294,6 @@ Users of ``LLM-ABBA`` and ``ABBA`` as well as the software can cite:
       pages = {6294}, 
       journal = {Journal of Open Source Software} 
    }
+
 
 
