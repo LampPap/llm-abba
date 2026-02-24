@@ -18,6 +18,8 @@ from datasets.dataset_dict import DatasetDict
 from datasets import Dataset
 import matplotlib.pyplot as plt
 
+torch.cuda.empty_cache()
+
 def save_abba(model, filename):
     pickle.dump(model, file = open(filename, "wb"))
 

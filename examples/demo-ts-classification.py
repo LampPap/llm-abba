@@ -2,16 +2,23 @@ import os
 import argparse
 import pandas as pd
 import numpy as np
-import llmabba.llmabba
-from llmabba.llmabba import LLMABBA
+import llmabba.llm_abba
+from llmabba.llm_abba import LLMABBA
 from sklearn.model_selection import train_test_split
+from huggingface_hub import login
+import torch
 ##  Loading models
+
+your_token = "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"  # Replace with your actual token
+login(token=your_token)
+torch.cuda.empty_cache()
+
 
 if __name__=='__main__':
 
     project_name = "PTBDB"
     task_tpye = "classification"  # classification, regression or forecasting
-    model_name = 'mistralai/Mistral-7B-Instruct-v0.1'
+    model_name = ""
     prompt_input = f"""This is a classification task. Identify the "ECG Abnormality" according to the given "Symbolic Series"."""
 
     abnormal_df = pd.read_csv('../test_data/ptbdb_abnormal.csv', header=None)
@@ -50,6 +57,7 @@ if __name__=='__main__':
         alphabet_set=-1,
         model_tokenizer=model_tokenizer,
         scalar="z-score",
+        draw_ts = True,
     )
     LLMABBA_classification.train(
         model_input=model_input,

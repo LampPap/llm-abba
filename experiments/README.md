@@ -52,6 +52,8 @@ ABBA_tol=0.005
 ABBA_init='agg'
 ABBA_alpha=0.01
 
+time2=$(date "+%Y-%m-%d %H:%M:%S")
+echo $time2
 for i in {1..7}
 do
   echo ${data_name[$i]}
@@ -69,10 +71,32 @@ do
   --ABBA_scl=1 \
   --MAX_LENGTH 4096
 done
+echo $time2
 ```
 
+To reproduce the [DrCIF](https://arxiv.org/abs/2305.01429) and
+[FreshPRINCE](https://arxiv.org/abs/2201.12048) on [Time Series Extrinsic Regression (TSER)](https://arxiv.org/abs/2006.12672) benchmark, we used the [tsml-eval](https://tsml-eval.readthedocs.io/en/v0.4.0/) that is a package containing tools for running experiments with time series machine learning algorithms and evaluating the results. 
 
+```bash
+ml Python/3.10.8-GCCcore-12.2.0
+pip install tsml-eval==0.3.0
 
+data_name=('AppliancesEnergy' 'HouseholdPowerConsumption1_nmv' 'HouseholdPowerConsumption2_nmv' 'BenzeneConcentration_nmv'
+             'BeijingPM25Quality_nmv' 'BeijingPM10Quality_nmv' 'LiveFuelMoistureContent' 'FloodModeling1'
+             'FloodModeling2' 'FloodModeling3' 'AustraliaRainfall' 'PPGDalia_eq' 'IEEEPPG' 'BIDMC32RR' 'BIDMC32HR' 'BIDMC32SpO2'
+             'NewsHeadlineSentiment' 'NewsTitleSentiment' 'Covid3Month')
+             
+model_name=('MultiROCKET' 'InceptionE' 'TSF' 'Ridge' 'RotF' 'DrCIF' 'FreshPRINCE' 'CNN')
+
+time3=$(date "+%Y-%m-%d %H:%M:%S")
+echo $time3
+for i in {0..18}
+do
+  python tsml-eval/tsml_eval/publications/2023/tser_archive_expansion/run_experiments.py ${data_name[$i]} results/ ${model_name} ${data_name[$i]} 0
+done
+time3=$(date "+%Y-%m-%d %H:%M:%S")
+echo $time3
+```
 
 
 ### Forecasting

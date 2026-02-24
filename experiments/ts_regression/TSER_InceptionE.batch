@@ -1,0 +1,35 @@
+#!/bin/sh
+#SBATCH --partition=cpulong
+#SBATCH --time=72:00:00
+#SBATCH --nodes=1
+#SBATCH --cpus-per-task=1
+#SBATCH --mem=100G
+#SBATCH --job-name=InceptionE_TSER
+#SBATCH --err=TSER_InceptionE.err
+#SBATCH --out=TSER_InceptionE.out
+#SBATCH --mail-user=kangchen@fel.cvut.cz    # where send info about job
+#SBATCH --mail-type=ALL              # what to send, valid type values are NONE, BEGIN, END, FAIL, REQUEUE, ALL
+
+/bin/hostname
+srun -l /bin/hostname
+srun -l /bin/pwd
+
+ml Python/3.10.8-GCCcore-12.2.0
+source /home/kangchen/QABBA-ECE/EnvABBA/bin/activate
+cd /home/kangchen/QABBA-ECE/
+
+data_name=('AppliancesEnergy' 'HouseholdPowerConsumption1_nmv' 'HouseholdPowerConsumption2_nmv' 'BenzeneConcentration_nmv'
+             'BeijingPM25Quality_nmv' 'BeijingPM10Quality_nmv' 'LiveFuelMoistureContent' 'FloodModeling1'
+             'FloodModeling2' 'FloodModeling3' 'AustraliaRainfall' 'PPGDalia_eq' 'IEEEPPG' 'BIDMC32RR' 'BIDMC32HR' 'BIDMC32SpO2'
+             'NewsHeadlineSentiment' 'NewsTitleSentiment' 'Covid3Month')
+#model_name=('MultiROCKET' 'InceptionE' 'TSF' 'Ridge'
+#             'RotF' 'DrCIF' 'FreshPRINCE' 'CNN')
+model_name='InceptionE'
+time3=$(date "+%Y-%m-%d %H:%M:%S")
+echo $time3
+for i in {0..18}
+do
+  python tsml-eval/tsml_eval/publications/2023/tser_archive_expansion/run_experiments.py ${data_name[$i]} results/ ${model_name} ${data_name[$i]} 0
+done
+time3=$(date "+%Y-%m-%d %H:%M:%S")
+echo $time3

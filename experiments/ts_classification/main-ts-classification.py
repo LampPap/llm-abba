@@ -33,12 +33,6 @@ def listToString(s):
     return str1
 
 def compute_metrics(pred):
-    # print('######################################')
-    # print(pred.predictions.shape)
-    # print('######################################')
-    # print(pred.predictions.argmax(-1))
-    # print('######################################')
-    # print(pred.label_ids.shape)
 
     labels = pred.label_ids
     preds = pred.predictions.argmax(-1)
@@ -73,14 +67,6 @@ class MSELossTrainer(Trainer):
         # Get model's predictions
         outputs = model(**inputs)
         logits = outputs.get("logits")
-
-        print('######################################')
-        print(logits.squeeze())
-        print('######################################')
-        print(inputs.pop("labels"))
-        print('######################################')
-        # print(pred.label_ids.shape)
-
         # Compute MSE loss
         #         loss = F.mse_loss(logits.squeeze(), labels.float())
         loss = F.mse_loss(logits.squeeze(), labels.float()) / batch_size
