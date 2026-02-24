@@ -9,7 +9,7 @@ from huggingface_hub import login
 import torch
 ##  Loading models
 
-your_token = "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"  # Replace with your actual token
+your_token = ""  # Replace with your actual token
 login(token=your_token)
 torch.cuda.empty_cache()
 
