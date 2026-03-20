@@ -10,7 +10,9 @@ import torch
 ##  Loading models
 
 your_token = ""  # Replace with your actual token
-login(token=your_token)
+from huggingface_hub import login
+login()  # Uses your saved token
+
 torch.cuda.empty_cache()
 
 
